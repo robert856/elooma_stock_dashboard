@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Dashboard — Elooma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111318;
+    --surface2: #181c23;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --dim: #374151;
+    --green: #22c55e;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --accent: #00d9a3;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 40px 24px;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-left { display: flex; align-items: baseline; gap: 14px; }
+
+  .brand {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+
+  .brand-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+
+  .created-by {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .created-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── API Bar ── */
+  .api-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+  }
+
+  .api-bar label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .api-bar input {
+    flex: 1;
+    background: var(--surface2);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .api-bar input:focus { border-color: var(--accent); }
+  .api-bar input::placeholder { color: var(--dim); }
+
+  .api-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    font-family: var(--mono);
+    line-height: 1.6;
+  }
+
+  .api-note a { color: var(--accent); text-decoration: none; }
+
+  /* ── Table ── */
+  .table-wrap { width: 100%; overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+    min-width: 960px;
+  }
+
+  thead tr { border-bottom: 0.5px solid var(--border2); }
+
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  th.drag-th { width: 28px; padding: 10px 6px 10px 14px; }
+  th:nth-child(2) { width: 180px; }
+
+  tbody tr {
+    border-bottom: 0.5px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:hover { background: var(--surface); }
+
+  /* drag states */
+  tbody tr.sortable-chosen { background: var(--surface2) !important; opacity: 0.95; }
+  tbody tr.sortable-ghost { opacity: 0.3; }
+  tbody tr.sortable-drag { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
+
+  td { padding: 0; vertical-align: middle; }
+
+  /* drag handle cell */
+  .drag-cell {
+    padding: 12px 6px 12px 14px;
+    cursor: grab;
+    color: var(--dim);
+    user-select: none;
+    touch-action: none;
+  }
+
+  .drag-cell:active { cursor: grabbing; }
+
+  .drag-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 14px;
+  }
+
+  .drag-icon span {
+    display: block;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 1px;
+    transition: background 0.15s;
+  }
+
+  tr:hover .drag-cell { color: var(--muted); }
+
+  /* symbol cell */
+  .symbol-cell {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .symbol-wrap { display: flex; flex-direction: column; gap: 2px; }
+
+  .symbol-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    width: 80px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .symbol-input::placeholder {
+    color: var(--dim);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .symbol-input:focus { color: var(--accent); }
+
+  .fetch-hint {
+    font-size: 9px;
+    color: var(--dim);
+    font-family: var(--mono);
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  .symbol-input:focus + .fetch-hint { opacity: 1; }
+
+  .company-name {
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 110px;
+  }
+
+
+
+  /* data cells */
+  .data-cell {
+    padding: 12px 14px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .data-cell.price { font-size: 14px; font-weight: 600; }
+  .data-cell.empty { color: var(--dim); }
+  .change-up { color: var(--green); }
+  .change-down { color: var(--red); }
+  .buy-rating { color: var(--green); }
+  .hold-rating { color: var(--amber); }
+  .sell-rating { color: var(--red); }
+
+  /* skeleton */
+  .skeleton {
+    height: 13px;
+    width: 58px;
+    background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    display: inline-block;
+    animation: blink 2s infinite;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  .error-cell { color: var(--red); font-size: 11px; }
+
+  /* footer */
+  .footer {
+    margin-top: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .refresh-all-btn {
+    background: none;
+    border: 0.5px solid var(--border2);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+
+  .refresh-all-btn:hover {
+    background: rgba(0,217,163,0.07);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 20px 12px; }
+    .api-bar { flex-direction: column; align-items: stretch; }
+    .header { flex-direction: column; align-items: flex-start; }
+    .header-right { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="brand">ELOOMA</span>
+    <span class="brand-sub">Stock Dashboard &middot; powered by Claude AI</span>
+  </div>
+  <div class="header-right">
+    <span class="created-by">Created by</span>
+    <span class="created-name">Elooma</span>
+  </div>
+</div>
+
+<div class="api-bar">
+  <label>API Key</label>
+  <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" />
+</div>
+
+<p class="api-note">
+  Your API key stays in your browser only — never stored or sent anywhere except directly to Anthropic.<br>
+  Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> &rarr; API Keys.
+</p>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="drag-th"></th>
+        <th>Symbol</th>
+        <th>Price</th>
+        <th>Change</th>
+        <th>52W High / Low</th>
+        <th>Annual Rev</th>
+        <th>PT High / Low</th>
+        <th>Consensus</th>
+        <th>Updated</th>
+      </tr>
+    </thead>
+    <tbody id="stockTable"></tbody>
+  </table>
+</div>
+
+<div class="footer">
+  <span>Data via Claude AI web search &mdash; not real-time. For informational use only.</span>
+  <button class="refresh-all-btn" onclick="refreshAll()">&#8635; Refresh All</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script>
+const DEFAULT_SYMBOLS = ['RKLB', '', '', '', '', '', '', ''];
+const COLS = ['price','change','high52','low52','revenue','ptHigh','ptLow','consensus','updated'];
+
+// Each row gets a stable unique ID so data cells can be found even after reorder
+let rowCounter = 0;
+
+function makeRow(symbol) {
+  const uid = rowCounter++;
+  const tr = document.createElement('tr');
+  tr.dataset.uid = uid;
+  tr.dataset.symbol = symbol || '';
+
+  // drag handle
+  const tdDrag = document.createElement('td');
+  tdDrag.className = 'drag-cell';
+  tdDrag.setAttribute('title', 'Drag to reorder');
+  tdDrag.innerHTML = `<div class="drag-icon"><span></span><span></span><span></span></div>`;
+  tr.appendChild(tdDrag);
+
+  // symbol cell
+  const tdSymbol = document.createElement('td');
+  const symCell = document.createElement('div');
+  symCell.className = 'symbol-cell';
+
+  const symWrap = document.createElement('div');
+  symWrap.className = 'symbol-wrap';
+
+  const inp = document.createElement('input');
+  inp.className = 'symbol-input';
+  inp.type = 'text';
+  inp.value = symbol || '';
+  inp.placeholder = 'Ticker…';
+  inp.maxLength = 8;
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const val = inp.value.trim().toUpperCase();
+      inp.value = val;
+      tr.dataset.symbol = val;
+      inp.blur();
+      if (val) fetchRow(uid);
+    }
+  });
+  inp.addEventListener('blur', () => {
+    const val = inp.value.trim().toUpperCase();
+    inp.value = val;
+    if (val && val !== tr.dataset.symbol) {
+      tr.dataset.symbol = val;
+      fetchRow(uid);
+    } else {
+      tr.dataset.symbol = val;
+    }
+  });
+
+  const hint = document.createElement('span');
+  hint.className = 'fetch-hint';
+  hint.textContent = 'enter ↵ or click away';
+
+  const nameEl = document.createElement('span');
+  nameEl.className = 'company-name';
+  nameEl.id = `cname-${uid}`;
+
+  symWrap.appendChild(inp);
+  symWrap.appendChild(hint);
+  symWrap.appendChild(nameEl);
+
+  symCell.appendChild(symWrap);
+  tdSymbol.appendChild(symCell);
+  tr.appendChild(tdSymbol);
+
+  COLS.forEach(col => {
+    const td = document.createElement('td');
+    td.className = 'data-cell empty';
+    td.id = `${col}-${uid}`;
+    td.textContent = '—';
+    if (col === 'low52' || col === 'ptLow') td.style.display = 'none';
+    tr.appendChild(td);
+  });
+
+  return tr;
+}
+
+function buildTable() {
+  const tbody = document.getElementById('stockTable');
+  tbody.innerHTML = '';
+  DEFAULT_SYMBOLS.forEach(sym => tbody.appendChild(makeRow(sym)));
+
+  Sortable.create(tbody, {
+    handle: '.drag-cell',
+    animation: 150,
+    ghostClass: 'sortable-ghost',
+    chosenClass: 'sortable-chosen',
+    dragClass: 'sortable-drag',
+  });
+}
+
+function getCells(uid) {
+  return {
+    row: document.querySelector(`tr[data-uid="${uid}"]`),
+    price: document.getElementById(`price-${uid}`),
+    change: document.getElementById(`change-${uid}`),
+    high52: document.getElementById(`high52-${uid}`),
+    low52: document.getElementById(`low52-${uid}`),
+    revenue: document.getElementById(`revenue-${uid}`),
+    ptHigh: document.getElementById(`ptHigh-${uid}`),
+    ptLow: document.getElementById(`ptLow-${uid}`),
+    consensus: document.getElementById(`consensus-${uid}`),
+    updated: document.getElementById(`updated-${uid}`),
+    cname: document.getElementById(`cname-${uid}`),
+  };
+}
+
+function setLoading(uid) {
+  COLS.forEach(col => {
+    if (col === 'low52' || col === 'ptLow') return;
+    const td = document.getElementById(`${col}-${uid}`);
+    if (td) { td.innerHTML = '<span class="skeleton"></span>'; td.className = 'data-cell'; }
+  });
+}
+
+function setError(uid, msg) {
+  COLS.forEach((col, i) => {
+    const td = document.getElementById(`${col}-${uid}`);
+    if (td) {
+      td.textContent = i === 0 ? msg : '—';
+      td.className = i === 0 ? 'data-cell error-cell' : 'data-cell empty';
+    }
+  });
+}
+
+function ratingClass(r) {
+  if (!r) return '';
+  const s = r.toLowerCase();
+  if (s.includes('buy')) return 'buy-rating';
+  if (s.includes('hold') || s.includes('neutral')) return 'hold-rating';
+  if (s.includes('sell')) return 'sell-rating';
+  return '';
+}
+
+function setData(uid, d) {
+  const c = getCells(uid);
+  if (!c.price) return;
+
+  c.price.innerHTML = `<span class="live-dot"></span>${d.price || 'N/A'}`;
+  c.price.className = 'data-cell price';
+
+  const dir = d.changeDir === 'up' ? 'change-up' : d.changeDir === 'down' ? 'change-down' : '';
+  c.change.textContent = d.change || '—';
+  c.change.className = `data-cell ${dir}`;
+
+  c.high52.textContent = `${d.high52 || '—'} / ${d.low52 || '—'}`;  c.high52.className = 'data-cell';
+  if (c.low52) c.low52.style.display = 'none';
+  c.revenue.textContent = d.revenue || '—'; c.revenue.className = 'data-cell';
+  c.ptHigh.textContent = `${d.ptHigh || '—'} / ${d.ptLow || '—'}`;  c.ptHigh.className = 'data-cell';
+  if (c.ptLow) c.ptLow.style.display = 'none';
+  c.consensus.textContent = d.consensus || '—';
+  c.consensus.className = `data-cell ${ratingClass(d.consensus)}`;
+  c.updated.textContent = d.updated || '—'; c.updated.className = 'data-cell empty';
+
+  if (d.companyName && c.cname) c.cname.textContent = d.companyName;
+}
+
+async function fetchRow(uid) {
+  const row = document.querySelector(`tr[data-uid="${uid}"]`);
+  if (!row) return;
+  const symbol = row.dataset.symbol.trim().toUpperCase();
+  if (!symbol) return;
+
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { alert('Please enter your Anthropic API key first.'); return; }
+
+  setLoading(uid);
+
+  const prompt = `You are a financial data assistant. For the stock ticker "${symbol}", use your web search tool to get current information, then return ONLY a valid JSON object with these exact keys — no markdown, no explanation, nothing else:
+
+{
+  "companyName": "short company name max 25 chars",
+  "price": "current stock price with $ sign e.g. $131.16",
+  "change": "today percent change e.g. +5.12% or -2.3%",
+  "changeDir": "up or down",
+  "high52": "52-week high with $ sign",
+  "low52": "52-week low with $ sign",
+  "revenue": "most recent annual revenue e.g. $601.8M or $4.2B",
+  "ptHigh": "highest analyst 12-month price target with $ sign",
+  "ptLow": "lowest analyst 12-month price target with $ sign",
+  "consensus": "analyst consensus e.g. Strong Buy, Buy, Hold, Sell",
+  "updated": "today date e.g. May 20 2026"
+}
+
+If a value is unavailable use N/A. Return only the JSON object, nothing else.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error?.message || `HTTP ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    let text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    text = text.replace(/```json|```/g, '').trim();
+
+    let parsed;
+    try { parsed = JSON.parse(text); }
+    catch {
+      const m = text.match(/\{[\s\S]*\}/);
+      if (m) parsed = JSON.parse(m[0]);
+      else throw new Error('Could not parse response');
+    }
+
+    setData(uid, parsed);
+  } catch (err) {
+    setError(uid, err.message.slice(0, 32));
+    console.error(err);
+  } finally {
+  }
+}
+
+function refreshAll() {
+  const rows = document.querySelectorAll('#stockTable tr');
+  let delay = 0;
+  rows.forEach(row => {
+    if (row.dataset.symbol) {
+      const uid = parseInt(row.dataset.uid);
+      setTimeout(() => fetchRow(uid), delay);
+      delay += 600;
+    }
+  });
+}
+
+buildTable();
+</script>
+</body>
+</html>
