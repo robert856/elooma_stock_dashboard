@@ -378,6 +378,8 @@
         <th>Change</th>
         <th>52W High / Low</th>
         <th>Annual Rev</th>
+        <th>P/E</th>
+        <th>Mkt Cap</th>
         <th>PT High / Low</th>
         <th>Consensus</th>
         <th>Updated</th>
@@ -395,7 +397,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
 const DEFAULT_SYMBOLS = ['RKLB', '', '', '', '', '', '', ''];
-const COLS = ['price','change','high52','low52','revenue','ptHigh','ptLow','consensus','updated'];
+const COLS = ['price','change','high52','low52','revenue','pe','mktcap','ptHigh','ptLow','consensus','updated'];
 
 // Each row gets a stable unique ID so data cells can be found even after reorder
 let rowCounter = 0;
@@ -497,6 +499,8 @@ function getCells(uid) {
     high52: document.getElementById(`high52-${uid}`),
     low52: document.getElementById(`low52-${uid}`),
     revenue: document.getElementById(`revenue-${uid}`),
+    pe: document.getElementById(`pe-${uid}`),
+    mktcap: document.getElementById(`mktcap-${uid}`),
     ptHigh: document.getElementById(`ptHigh-${uid}`),
     ptLow: document.getElementById(`ptLow-${uid}`),
     consensus: document.getElementById(`consensus-${uid}`),
@@ -546,6 +550,8 @@ function setData(uid, d) {
   c.high52.textContent = `${d.high52 || '—'} / ${d.low52 || '—'}`;  c.high52.className = 'data-cell';
   if (c.low52) c.low52.style.display = 'none';
   c.revenue.textContent = d.revenue || '—'; c.revenue.className = 'data-cell';
+  c.pe.textContent = d.pe || '—'; c.pe.className = 'data-cell';
+  c.mktcap.textContent = d.mktcap || '—'; c.mktcap.className = 'data-cell';
   c.ptHigh.textContent = `${d.ptHigh || '—'} / ${d.ptLow || '—'}`;  c.ptHigh.className = 'data-cell';
   if (c.ptLow) c.ptLow.style.display = 'none';
   c.consensus.textContent = d.consensus || '—';
@@ -576,6 +582,8 @@ async function fetchRow(uid) {
   "high52": "52-week high with $ sign",
   "low52": "52-week low with $ sign",
   "revenue": "most recent annual revenue e.g. $601.8M or $4.2B",
+  "pe": "price to earnings ratio e.g. 42.3x or N/A if unprofitable",
+  "mktcap": "market capitalization e.g. $75.9B",
   "ptHigh": "highest analyst 12-month price target with $ sign",
   "ptLow": "lowest analyst 12-month price target with $ sign",
   "consensus": "analyst consensus e.g. Strong Buy, Buy, Hold, Sell",
