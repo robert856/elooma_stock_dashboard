@@ -122,7 +122,7 @@ tr:hover .drag-handle{color:var(--muted);}
   </div>
   <div class="key-bar">
     <span class="key-label">Finnhub Key</span>
-    <input class="key-input" type="text" id="finnhubKey" placeholder="Get free key at finnhub.io (for live prices)" autocomplete="off" spellcheck="false"/>
+    <input class="key-input" type="password" id="finnhubKey" placeholder="Get free key at finnhub.io (for live prices)" autocomplete="off" spellcheck="false"/>
     <span class="key-status none" id="finnhubStatus">No key</span>
   </div>
   <p class="key-note">
@@ -353,13 +353,28 @@ async function fetchAnalyst(id){
 {"companyName":"short name max 22 chars","revenue":"annual revenue TTM e.g. $601.8M","pe":"P/E ratio e.g. 42.3x or N/A","mktcap":"market cap e.g. $12.4B","ptHigh":"highest analyst price target with $","ptLow":"lowest analyst price target with $","consensus":"analyst consensus e.g. Strong Buy, Buy, Hold, Sell","updated":"today date"}
 Use N/A if unavailable. Return only the JSON.`;
 
-  try{
+  const callClaude = async () => {
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':ak,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt}]})
     });
     if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||`HTTP ${res.status}`); }
+    return res;
+  };
+
+  try{
+    let res;
+    try { res = await callClaude(); }
+    catch(e) {
+      // If rate limited, wait 30s and retry once
+      if(e.message && e.message.toLowerCase().includes('exceed')) {
+        console.log(`[analyst] ${sym}: rate limited, retrying in 30s…`);
+        const updEl=C('updated',id); if(updEl){updEl.textContent='retrying…';updEl.className='dc ai-pending';}
+        await new Promise(r=>setTimeout(r,30000));
+        res = await callClaude();
+      } else { throw e; }
+    }
     const data=await res.json();
     let text=data.content.filter(b=>b.type==='text').map(b=>b.text).join('').replace(/```json|```/g,'').trim();
     let parsed; try{parsed=JSON.parse(text);}catch{ const m=text.match(/\{[\s\S]*\}/); if(m)parsed=JSON.parse(m[0]); else throw new Error('bad json'); }
