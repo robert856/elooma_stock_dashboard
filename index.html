@@ -3,376 +3,438 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stock Dashboard — Elooma</title>
+<title>ELOOMA — Stock Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #0a0c0f;
-    --surface: #111318;
-    --surface2: #181c23;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #e8eaf0;
-    --muted: #6b7280;
-    --dim: #374151;
-    --green: #22c55e;
-    --red: #ef4444;
-    --amber: #f59e0b;
-    --accent: #00d9a3;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', sans-serif;
-  }
+:root {
+  --bg:       #080a0d;
+  --surface:  #0e1117;
+  --surface2: #141920;
+  --border:   rgba(255,255,255,0.06);
+  --border2:  rgba(255,255,255,0.11);
+  --text:     #dde2ec;
+  --muted:    #5a6478;
+  --dim:      #2d3548;
+  --green:    #00e676;
+  --red:      #ff4444;
+  --amber:    #ffb300;
+  --accent:   #00e5ff;
+  --accent2:  #7c4dff;
+  --mono:     'Space Mono', monospace;
+  --sans:     'Syne', sans-serif;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    padding: 40px 24px;
-  }
+html, body { height: 100%; }
 
-  /* ── Header ── */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  padding: 32px 28px 48px;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 80% 0%, rgba(0,229,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 10% 90%, rgba(124,77,255,0.04) 0%, transparent 60%);
+}
 
-  .header-left { display: flex; align-items: baseline; gap: 14px; }
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
 
-  .brand {
-    font-family: var(--mono);
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-  }
+.brand-block { display: flex; align-items: center; gap: 18px; }
 
-  .brand-sub {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-  }
+.brand {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+  position: relative;
+}
 
-  .header-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-  }
+.brand::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
 
-  .created-by {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--dim);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
+.brand-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
 
-  .created-name {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 0.04em;
-  }
+.brand-sub span {
+  display: block;
+  color: var(--dim);
+}
 
-  /* ── API Bar ── */
-  .api-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    padding: 12px 16px;
-    background: var(--surface);
-    border: 0.5px solid var(--border2);
-    border-radius: 8px;
-  }
+.header-right {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  text-align: right;
+  letter-spacing: 0.06em;
+  line-height: 1.8;
+}
 
-  .api-bar label {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    white-space: nowrap;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
+.header-right strong {
+  color: var(--muted);
+  font-weight: 400;
+  display: block;
+  font-size: 11px;
+}
 
-  .api-bar input {
-    flex: 1;
-    background: var(--surface2);
-    border: 0.5px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-  }
+/* ── API KEY BAR ── */
+.key-section { margin-bottom: 28px; }
 
-  .api-bar input:focus { border-color: var(--accent); }
-  .api-bar input::placeholder { color: var(--dim); }
+.key-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
 
-  .api-note {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 28px;
-    font-family: var(--mono);
-    line-height: 1.6;
-  }
+.key-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-  .api-note a { color: var(--accent); text-decoration: none; }
+.key-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  min-width: 0;
+}
 
-  /* ── Table ── */
-  .table-wrap { width: 100%; overflow-x: auto; }
+.key-input::placeholder { color: var(--dim); }
+.key-input:focus { color: var(--accent); }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: var(--mono);
-    font-size: 12px;
-    min-width: 960px;
-  }
+.key-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-  thead tr { border-bottom: 0.5px solid var(--border2); }
+.key-status.ok   { color: var(--green); }
+.key-status.none { color: var(--dim); }
 
-  th {
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    white-space: nowrap;
-    user-select: none;
-  }
+.key-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  line-height: 1.6;
+}
 
-  th.drag-th { width: 28px; padding: 10px 6px 10px 14px; }
-  th:nth-child(2) { width: 180px; }
+.key-note a { color: var(--accent); text-decoration: none; }
 
-  tbody tr {
-    border-bottom: 0.5px solid var(--border);
-    transition: background 0.15s;
-  }
+/* ── STATUS BAR ── */
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  flex-wrap: wrap;
+}
 
-  tbody tr:hover { background: var(--surface); }
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--dim);
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
+}
 
-  /* drag states */
-  tbody tr.sortable-chosen { background: var(--surface2) !important; opacity: 0.95; }
-  tbody tr.sortable-ghost { opacity: 0.3; }
-  tbody tr.sortable-drag { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
+.status-dot.active {
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
 
-  td { padding: 0; vertical-align: middle; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  /* drag handle cell */
-  .drag-cell {
-    padding: 12px 6px 12px 14px;
-    cursor: grab;
-    color: var(--dim);
-    user-select: none;
-    touch-action: none;
-  }
+/* ── TABLE ── */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 0.5px solid var(--border2);
+  border-radius: 8px;
+  background: var(--surface);
+}
 
-  .drag-cell:active { cursor: grabbing; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  min-width: 1000px;
+}
 
-  .drag-icon {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    width: 14px;
-  }
+thead tr {
+  border-bottom: 0.5px solid var(--border2);
+  background: var(--surface2);
+}
 
-  .drag-icon span {
-    display: block;
-    height: 1.5px;
-    background: currentColor;
-    border-radius: 1px;
-    transition: background 0.15s;
-  }
+th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  user-select: none;
+  font-family: var(--mono);
+}
 
-  tr:hover .drag-cell { color: var(--muted); }
+th.th-drag { width: 32px; padding: 11px 8px 11px 16px; }
 
-  /* symbol cell */
-  .symbol-cell {
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+tbody tr {
+  border-bottom: 0.5px solid var(--border);
+  transition: background 0.12s;
+}
 
-  .symbol-wrap { display: flex; flex-direction: column; gap: 2px; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(255,255,255,0.02); }
+tbody tr.sortable-chosen { background: var(--surface2) !important; }
+tbody tr.sortable-ghost  { opacity: 0.25; }
 
-  .symbol-input {
-    background: transparent;
-    border: none;
-    outline: none;
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    width: 80px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
+td { padding: 0; vertical-align: middle; }
 
-  .symbol-input::placeholder {
-    color: var(--dim);
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
-  }
+/* drag handle */
+.drag-handle {
+  padding: 14px 8px 14px 16px;
+  cursor: grab;
+  color: var(--dim);
+  user-select: none;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px;
+  width: 32px;
+}
 
-  .symbol-input:focus { color: var(--accent); }
+.drag-handle:active { cursor: grabbing; }
+.drag-handle i { display: block; height: 1px; width: 14px; background: currentColor; border-radius: 1px; transition: background 0.15s; }
+tr:hover .drag-handle { color: var(--muted); }
 
-  .fetch-hint {
-    font-size: 9px;
-    color: var(--dim);
-    font-family: var(--mono);
-    letter-spacing: 0.04em;
-    opacity: 0;
-    transition: opacity 0.2s;
-    white-space: nowrap;
-  }
+/* symbol cell */
+.sym-cell {
+  padding: 10px 16px;
+  min-width: 150px;
+}
 
-  .symbol-input:focus + .fetch-hint { opacity: 1; }
+.sym-wrap { display: flex; flex-direction: column; gap: 3px; }
 
-  .company-name {
-    font-size: 10px;
-    color: var(--muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 110px;
-  }
+.sym-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  width: 90px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 
+.sym-input::placeholder { color: var(--dim); font-weight: 400; font-size: 11px; text-transform: none; letter-spacing: 0; }
+.sym-input:focus { color: var(--accent); }
 
+.sym-hint {
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-family: var(--mono);
+}
 
-  /* data cells */
-  .data-cell {
-    padding: 12px 14px;
-    color: var(--text);
-    white-space: nowrap;
-  }
+.sym-input:focus ~ .sym-hint { opacity: 1; }
 
-  .data-cell.price { font-size: 14px; font-weight: 600; }
-  .data-cell.empty { color: var(--dim); }
-  .change-up { color: var(--green); }
-  .change-down { color: var(--red); }
-  .buy-rating { color: var(--green); }
-  .hold-rating { color: var(--amber); }
-  .sell-rating { color: var(--red); }
+.sym-name {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+  font-family: var(--sans);
+}
 
-  /* skeleton */
-  .skeleton {
-    height: 13px;
-    width: 58px;
-    background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.2s infinite;
-    border-radius: 3px;
-    display: inline-block;
-  }
+/* data cells */
+.dc {
+  padding: 14px 16px;
+  white-space: nowrap;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+}
 
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
+.dc.empty { color: var(--dim); font-size: 11px; }
+.dc.price-cell { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
 
-  .live-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    display: inline-block;
-    animation: blink 2s infinite;
-    margin-right: 5px;
-    vertical-align: middle;
-  }
+.live-dot {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 6px;
+  vertical-align: middle;
+  animation: pulse 2s infinite;
+}
 
-  @keyframes blink {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.2; }
-  }
+.up   { color: var(--green); }
+.down { color: var(--red); }
 
-  .error-cell { color: var(--red); font-size: 11px; }
+.rating-buy  { color: var(--green); }
+.rating-hold { color: var(--amber); }
+.rating-sell { color: var(--red); }
 
-  /* footer */
-  .footer {
-    margin-top: 24px;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--dim);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+.stale { opacity: 0.5; }
 
-  .refresh-all-btn {
-    background: none;
-    border: 0.5px solid var(--border2);
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--accent);
-    cursor: pointer;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: all 0.15s;
-  }
+/* skeleton shimmer */
+.sk {
+  display: inline-block;
+  height: 12px;
+  width: 56px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--surface2) 25%, var(--dim) 50%, var(--surface2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  opacity: 0.4;
+}
 
-  .refresh-all-btn:hover {
-    background: rgba(0,217,163,0.07);
-    border-color: var(--accent);
-  }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-  @media (max-width: 600px) {
-    body { padding: 20px 12px; }
-    .api-bar { flex-direction: column; align-items: stretch; }
-    .header { flex-direction: column; align-items: flex-start; }
-    .header-right { align-items: flex-start; }
-  }
+.err-cell { color: var(--red); font-size: 10px; letter-spacing: 0.03em; }
+
+/* ── FOOTER ── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+}
+
+.btn-refresh {
+  background: none;
+  border: 0.5px solid var(--border2);
+  border-radius: 5px;
+  padding: 8px 18px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+}
+
+.btn-refresh:hover {
+  background: rgba(0,229,255,0.06);
+  border-color: var(--accent);
+}
+
+.btn-refresh:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  body { padding: 20px 14px 40px; }
+  .header { flex-direction: column; align-items: flex-start; }
+  .header-right { text-align: left; }
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <span class="brand">ELOOMA</span>
-    <span class="brand-sub">Stock Dashboard &middot; powered by Claude AI</span>
+<!-- HEADER -->
+<header class="header">
+  <div class="brand-block">
+    <div class="brand">Elooma</div>
+    <div class="brand-sub">
+      Stock Dashboard
+      <span>Powered by Claude AI</span>
+    </div>
   </div>
   <div class="header-right">
-    <span class="created-by">Created by</span>
-    <span class="created-name">Elooma</span>
+    <strong>Created by Elooma</strong>
+    Beta v1.0
   </div>
+</header>
+
+<!-- API KEY -->
+<div class="key-section">
+  <div class="key-bar">
+    <span class="key-label">API Key</span>
+    <input class="key-input" type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false" />
+    <span class="key-status none" id="keyStatus">No key</span>
+  </div>
+  <p class="key-note">
+    Your key is saved in this browser only — never sent anywhere except directly to Anthropic.
+    Get one free at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys.
+  </p>
 </div>
 
-<div class="api-bar">
-  <label>API Key</label>
-  <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" />
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <span><span class="status-dot" id="statusDot"></span><span id="statusText">Ready</span></span>
+  <span id="lastRefreshed"></span>
 </div>
 
-<p class="api-note">
-  Your API key stays in your browser only — never stored or sent anywhere except directly to Anthropic.<br>
-  Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> &rarr; API Keys.
-</p>
-
+<!-- TABLE -->
 <div class="table-wrap">
   <table>
     <thead>
       <tr>
-        <th class="drag-th"></th>
+        <th class="th-drag"></th>
         <th>Symbol</th>
         <th>Price</th>
         <th>Change</th>
@@ -385,370 +447,408 @@
         <th>Updated</th>
       </tr>
     </thead>
-    <tbody id="stockTable"></tbody>
+    <tbody id="tbody"></tbody>
   </table>
 </div>
 
+<!-- FOOTER -->
 <div class="footer">
-  <span>Data via Claude AI web search &mdash; not real-time. For informational use only.</span>
-  <button class="refresh-all-btn" onclick="refreshAll()">&#8635; Refresh All</button>
+  <span class="footer-note">Data via Claude AI web search — not real-time. For informational use only.</span>
+  <button class="btn-refresh" id="btnRefreshAll" onclick="refreshAll()">↻ Refresh All</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
-const DEFAULT_SYMBOLS = ['RKLB', '', '', '', '', '', '', ''];
-const COLS = ['price','change','high52','low52','revenue','pe','mktcap','ptHigh','ptLow','consensus','updated'];
+'use strict';
 
-// Each row gets a stable unique ID so data cells can be found even after reorder
-let rowCounter = 0;
+// ── Constants ──────────────────────────────────────────────────────────────
+const DEFAULT_SYMBOLS = ['RKLB','','','','','','',''];
+const STORAGE = {
+  KEY:     'elooma_api_key',
+  SYMBOLS: 'elooma_symbols',
+  DATA:    'elooma_row_data',
+};
 
+// ── State ──────────────────────────────────────────────────────────────────
+let uidCounter = 0;
+let refreshQueue = null; // setTimeout handle
+
+// ── Storage helpers ────────────────────────────────────────────────────────
+const store = {
+  get: (k, fallback = null) => { try { const v = localStorage.getItem(k); return v != null ? JSON.parse(v) : fallback; } catch { return fallback; } },
+  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del: (k)    => { try { localStorage.removeItem(k); } catch {} },
+};
+
+// ── API Key management ─────────────────────────────────────────────────────
+function initApiKey() {
+  const inp = document.getElementById('apiKey');
+  const saved = store.get(STORAGE.KEY);
+  if (saved) { inp.value = saved; updateKeyStatus(true); }
+
+  inp.addEventListener('input', () => {
+    const v = inp.value.trim();
+    if (v) { store.set(STORAGE.KEY, v); updateKeyStatus(true); }
+    else   { store.del(STORAGE.KEY);   updateKeyStatus(false); }
+  });
+}
+
+function updateKeyStatus(hasKey) {
+  const el = document.getElementById('keyStatus');
+  if (hasKey) { el.textContent = '● Key saved'; el.className = 'key-status ok'; }
+  else        { el.textContent = 'No key';      el.className = 'key-status none'; }
+}
+
+function getApiKey() { return document.getElementById('apiKey').value.trim(); }
+
+// ── Symbol persistence ─────────────────────────────────────────────────────
+function saveSymbols() {
+  const syms = [...document.querySelectorAll('#tbody tr')].map(r => r.dataset.symbol || '');
+  store.set(STORAGE.SYMBOLS, syms);
+}
+
+function loadSymbols() {
+  const saved = store.get(STORAGE.SYMBOLS);
+  return (Array.isArray(saved) && saved.length) ? saved : [...DEFAULT_SYMBOLS];
+}
+
+// ── Row data persistence ───────────────────────────────────────────────────
+function saveRowData(symbol, data) {
+  if (!symbol) return;
+  const all = store.get(STORAGE.DATA, {});
+  all[symbol] = { ...data, _savedAt: new Date().toISOString() };
+  store.set(STORAGE.DATA, all);
+}
+
+function loadRowData(symbol) {
+  if (!symbol) return null;
+  const all = store.get(STORAGE.DATA, {});
+  return all[symbol] || null;
+}
+
+function ageLabel(iso) {
+  if (!iso) return '';
+  const mins = Math.round((Date.now() - new Date(iso)) / 60000);
+  if (mins <  1)    return 'just now';
+  if (mins <  60)   return `${mins}m ago`;
+  if (mins <  1440) return `${Math.round(mins/60)}h ago`;
+  return `${Math.round(mins/1440)}d ago`;
+}
+
+// ── Row builder ────────────────────────────────────────────────────────────
 function makeRow(symbol) {
-  const uid = rowCounter++;
-  const tr = document.createElement('tr');
-  tr.dataset.uid = uid;
+  const uid = uidCounter++;
+  const tr  = document.createElement('tr');
+  tr.dataset.uid    = uid;
   tr.dataset.symbol = symbol || '';
 
   // drag handle
   const tdDrag = document.createElement('td');
-  tdDrag.className = 'drag-cell';
-  tdDrag.setAttribute('title', 'Drag to reorder');
-  tdDrag.innerHTML = `<div class="drag-icon"><span></span><span></span><span></span></div>`;
+  tdDrag.innerHTML = `<div class="drag-handle"><i></i><i></i><i></i></div>`;
   tr.appendChild(tdDrag);
 
   // symbol cell
-  const tdSymbol = document.createElement('td');
-  const symCell = document.createElement('div');
-  symCell.className = 'symbol-cell';
-
+  const tdSym = document.createElement('td');
   const symWrap = document.createElement('div');
-  symWrap.className = 'symbol-wrap';
+  symWrap.className = 'sym-cell';
+
+  const inner = document.createElement('div');
+  inner.className = 'sym-wrap';
 
   const inp = document.createElement('input');
-  inp.className = 'symbol-input';
-  inp.type = 'text';
-  inp.value = symbol || '';
+  inp.className   = 'sym-input';
+  inp.type        = 'text';
+  inp.value       = symbol || '';
   inp.placeholder = 'Ticker…';
-  inp.maxLength = 8;
-  inp.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      const val = inp.value.trim().toUpperCase();
-      inp.value = val;
-      tr.dataset.symbol = val;
-      saveSymbols();
-      inp.blur();
-      if (val) fetchRow(uid);
-    }
-  });
-  inp.addEventListener('blur', () => {
-    const val = inp.value.trim().toUpperCase();
-    inp.value = val;
-    if (val && val !== tr.dataset.symbol) {
-      tr.dataset.symbol = val;
-      saveSymbols();
-      fetchRow(uid);
-    } else {
-      tr.dataset.symbol = val;
-      saveSymbols();
-    }
-  });
+  inp.maxLength   = 10;
+  inp.spellcheck  = false;
 
   const hint = document.createElement('span');
-  hint.className = 'fetch-hint';
+  hint.className   = 'sym-hint';
   hint.textContent = 'enter ↵ or click away';
 
   const nameEl = document.createElement('span');
-  nameEl.className = 'company-name';
-  nameEl.id = `cname-${uid}`;
+  nameEl.className = 'sym-name';
+  nameEl.id        = `name-${uid}`;
 
-  symWrap.appendChild(inp);
-  symWrap.appendChild(hint);
-  symWrap.appendChild(nameEl);
+  inp.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const v = inp.value.trim().toUpperCase();
+    inp.value = v;
+    tr.dataset.symbol = v;
+    saveSymbols();
+    inp.blur();
+    if (v) fetchRow(uid);
+  });
 
-  symCell.appendChild(symWrap);
-  tdSymbol.appendChild(symCell);
-  tr.appendChild(tdSymbol);
+  inp.addEventListener('blur', () => {
+    const v = inp.value.trim().toUpperCase();
+    inp.value = v;
+    const prev = tr.dataset.symbol;
+    tr.dataset.symbol = v;
+    saveSymbols();
+    if (v && v !== prev) fetchRow(uid);
+  });
 
-  COLS.forEach(col => {
+  inner.appendChild(inp);
+  inner.appendChild(hint);
+  inner.appendChild(nameEl);
+  symWrap.appendChild(inner);
+  tdSym.appendChild(symWrap);
+  tr.appendChild(tdSym);
+
+  // data cells — order matches columns
+  const cols = ['price','change','range','revenue','pe','mktcap','pt','consensus','updated'];
+  cols.forEach(col => {
     const td = document.createElement('td');
-    td.className = 'data-cell empty';
-    td.id = `${col}-${uid}`;
+    td.className = 'dc empty';
+    td.id        = `${col}-${uid}`;
     td.textContent = '—';
-    if (col === 'low52' || col === 'ptLow') td.style.display = 'none';
     tr.appendChild(td);
   });
 
   return tr;
 }
 
-function saveSymbols() {
-  const rows = document.querySelectorAll('#stockTable tr');
-  const syms = Array.from(rows).map(r => r.dataset.symbol || '');
-  localStorage.setItem('elooma_symbols', JSON.stringify(syms));
-}
-
-function loadSymbols() {
-  try {
-    const saved = localStorage.getItem('elooma_symbols');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch(e) {}
-  return DEFAULT_SYMBOLS;
-}
-
+// ── Table init ─────────────────────────────────────────────────────────────
 function buildTable() {
-  const tbody = document.getElementById('stockTable');
+  const tbody = document.getElementById('tbody');
   tbody.innerHTML = '';
-  loadSymbols().forEach(sym => tbody.appendChild(makeRow(sym)));
+  loadSymbols().forEach(s => tbody.appendChild(makeRow(s)));
 
   Sortable.create(tbody, {
-    handle: '.drag-cell',
-    animation: 150,
-    ghostClass: 'sortable-ghost',
+    handle:      '.drag-handle',
+    animation:   150,
+    ghostClass:  'sortable-ghost',
     chosenClass: 'sortable-chosen',
-    dragClass: 'sortable-drag',
-    onEnd: () => saveSymbols(),
+    onEnd:       saveSymbols,
   });
 }
 
-function getCells(uid) {
-  return {
-    row: document.querySelector(`tr[data-uid="${uid}"]`),
-    price: document.getElementById(`price-${uid}`),
-    change: document.getElementById(`change-${uid}`),
-    high52: document.getElementById(`high52-${uid}`),
-    low52: document.getElementById(`low52-${uid}`),
-    revenue: document.getElementById(`revenue-${uid}`),
-    pe: document.getElementById(`pe-${uid}`),
-    mktcap: document.getElementById(`mktcap-${uid}`),
-    ptHigh: document.getElementById(`ptHigh-${uid}`),
-    ptLow: document.getElementById(`ptLow-${uid}`),
-    consensus: document.getElementById(`consensus-${uid}`),
-    updated: document.getElementById(`updated-${uid}`),
-    cname: document.getElementById(`cname-${uid}`),
-  };
-}
+// ── Cell helpers ───────────────────────────────────────────────────────────
+function cell(col, uid) { return document.getElementById(`${col}-${uid}`); }
 
 function setLoading(uid) {
-  // Only show skeleton if cells are empty — keep cached data visible while refreshing
-  const priceEl = document.getElementById(`price-${uid}`);
-  const hasData = priceEl && priceEl.textContent.includes('$');
-  if (hasData) {
-    // Just dim the price slightly to indicate refresh in progress
-    if (priceEl) priceEl.style.opacity = '0.5';
+  // Only show skeleton if cell is truly empty (no cached data)
+  const priceEl = cell('price', uid);
+  if (priceEl && priceEl.textContent.includes('$')) {
+    priceEl.classList.add('stale');
     return;
   }
-  COLS.forEach(col => {
-    if (col === 'low52' || col === 'ptLow') return;
-    const td = document.getElementById(`${col}-${uid}`);
-    if (td) { td.innerHTML = '<span class="skeleton"></span>'; td.className = 'data-cell'; }
+  ['price','change','range','revenue','pe','mktcap','pt','consensus','updated'].forEach(col => {
+    const td = cell(col, uid);
+    if (td) { td.innerHTML = '<span class="sk"></span>'; td.className = 'dc'; }
   });
 }
 
 function setError(uid, msg) {
-  // If we have cached data, just restore opacity and show error only in updated col
-  const priceEl = document.getElementById(`price-${uid}`);
-  const hasData = priceEl && priceEl.textContent.includes('$');
-  if (hasData) {
-    if (priceEl) priceEl.style.opacity = '1';
-    const updEl = document.getElementById(`updated-${uid}`);
-    if (updEl) { updEl.textContent = '⚠ refresh failed'; updEl.className = 'data-cell error-cell'; }
+  const priceEl = cell('price', uid);
+  const hasCached = priceEl && priceEl.textContent.includes('$');
+  if (hasCached) {
+    priceEl.classList.remove('stale');
+    const upd = cell('updated', uid);
+    if (upd) { upd.textContent = '⚠ failed'; upd.className = 'dc err-cell'; }
     return;
   }
-  COLS.forEach((col, i) => {
-    const td = document.getElementById(`${col}-${uid}`);
-    if (td) {
-      td.textContent = i === 0 ? msg : '—';
-      td.className = i === 0 ? 'data-cell error-cell' : 'data-cell empty';
-    }
+  const priceCell = cell('price', uid);
+  if (priceCell) { priceCell.textContent = msg; priceCell.className = 'dc err-cell'; }
+  ['change','range','revenue','pe','mktcap','pt','consensus','updated'].forEach(col => {
+    const td = cell(col, uid);
+    if (td) { td.textContent = '—'; td.className = 'dc empty'; }
   });
 }
 
 function ratingClass(r) {
   if (!r) return '';
   const s = r.toLowerCase();
-  if (s.includes('buy')) return 'buy-rating';
-  if (s.includes('hold') || s.includes('neutral')) return 'hold-rating';
-  if (s.includes('sell')) return 'sell-rating';
+  if (s.includes('buy'))                       return 'rating-buy';
+  if (s.includes('hold') || s.includes('neu')) return 'rating-hold';
+  if (s.includes('sell'))                      return 'rating-sell';
   return '';
 }
 
-function setData(uid, d) {
-  const c = getCells(uid);
-  if (!c.price) return;
+function applyData(uid, d, isCache) {
+  const p = cell('price', uid);
+  if (!p) return;
 
-  c.price.style.opacity = '1'; // restore from loading dim
-  c.price.innerHTML = `<span class="live-dot"></span>${d.price || 'N/A'}`;
-  c.price.className = 'data-cell price';
+  p.classList.remove('stale');
+  p.innerHTML  = `<span class="live-dot"></span>${d.price || '—'}`;
+  p.className  = 'dc price-cell';
 
-  const dir = d.changeDir === 'up' ? 'change-up' : d.changeDir === 'down' ? 'change-down' : '';
-  c.change.textContent = d.change || '—';
-  c.change.className = `data-cell ${dir}`;
+  const dir = d.changeDir === 'up' ? 'up' : d.changeDir === 'down' ? 'down' : '';
+  const ch  = cell('change', uid);
+  if (ch) { ch.textContent = d.change || '—'; ch.className = `dc ${dir}`; }
 
-  c.high52.textContent = `${d.high52 || '—'} / ${d.low52 || '—'}`;  c.high52.className = 'data-cell';
-  if (c.low52) c.low52.style.display = 'none';
-  c.revenue.textContent = d.revenue || '—'; c.revenue.className = 'data-cell';
-  c.pe.textContent = d.pe || '—'; c.pe.className = 'data-cell';
-  c.mktcap.textContent = d.mktcap || '—'; c.mktcap.className = 'data-cell';
-  c.ptHigh.textContent = `${d.ptHigh || '—'} / ${d.ptLow || '—'}`;  c.ptHigh.className = 'data-cell';
-  if (c.ptLow) c.ptLow.style.display = 'none';
-  c.consensus.textContent = d.consensus || '—';
-  c.consensus.className = `data-cell ${ratingClass(d.consensus)}`;
-  c.updated.textContent = d.updated || '—'; c.updated.className = 'data-cell empty';
+  const rng = cell('range', uid);
+  if (rng) { rng.textContent = (d.high52 && d.low52) ? `${d.high52} / ${d.low52}` : d.high52 || '—'; rng.className = 'dc'; }
 
-  if (d.companyName && c.cname) c.cname.textContent = d.companyName;
+  const rev = cell('revenue', uid);
+  if (rev) { rev.textContent = d.revenue || '—'; rev.className = 'dc'; }
 
-  // Persist this row's data to localStorage
-  const row = document.querySelector(`tr[data-uid="${uid}"]`);
-  if (row && row.dataset.symbol) {
-    const sym = row.dataset.symbol;
-    const saved = JSON.parse(localStorage.getItem('elooma_row_data') || '{}');
-    saved[sym] = { ...d, cachedAt: new Date().toISOString() };
-    localStorage.setItem('elooma_row_data', JSON.stringify(saved));
+  const pe = cell('pe', uid);
+  if (pe) { pe.textContent = d.pe || '—'; pe.className = 'dc'; }
+
+  const mc = cell('mktcap', uid);
+  if (mc) { mc.textContent = d.mktcap || '—'; mc.className = 'dc'; }
+
+  const pt = cell('pt', uid);
+  if (pt) { pt.textContent = (d.ptHigh && d.ptLow) ? `${d.ptHigh} / ${d.ptLow}` : d.ptHigh || '—'; pt.className = 'dc'; }
+
+  const con = cell('consensus', uid);
+  if (con) { con.textContent = d.consensus || '—'; con.className = `dc ${ratingClass(d.consensus)}`; }
+
+  const upd = cell('updated', uid);
+  if (upd) {
+    upd.textContent = isCache ? ageLabel(d._savedAt) : (d.updated || new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}));
+    upd.className   = 'dc empty';
+    if (isCache && d._savedAt) upd.title = `Cached ${new Date(d._savedAt).toLocaleString()}`;
   }
+
+  const nm = document.getElementById(`name-${uid}`);
+  if (nm && d.companyName) nm.textContent = d.companyName;
 }
 
+// ── Fetch ──────────────────────────────────────────────────────────────────
 async function fetchRow(uid) {
-  const row = document.querySelector(`tr[data-uid="${uid}"]`);
+  const row    = document.querySelector(`tr[data-uid="${uid}"]`);
   if (!row) return;
-  const symbol = row.dataset.symbol.trim().toUpperCase();
+  const symbol = (row.dataset.symbol || '').trim().toUpperCase();
   if (!symbol) return;
 
-  const apiKey = document.getElementById('apiKey').value.trim();
+  const apiKey = getApiKey();
   if (!apiKey) { alert('Please enter your Anthropic API key first.'); return; }
 
   setLoading(uid);
+  setStatus('active', `Fetching ${symbol}…`);
 
-  const prompt = `You are a financial data assistant. For the stock ticker "${symbol}", use your web search tool to get current information, then return ONLY a valid JSON object with these exact keys — no markdown, no explanation, nothing else:
+  const prompt = `You are a financial data assistant. For the stock ticker "${symbol}", use your web_search tool to find current data, then return ONLY a valid JSON object — no markdown, no explanation, nothing else outside the JSON.
 
+Required JSON keys:
 {
-  "companyName": "short company name max 25 chars",
-  "price": "current stock price with $ sign e.g. $131.16",
-  "change": "today percent change e.g. +5.12% or -2.3%",
+  "companyName": "company name max 22 chars",
+  "price": "current price with $ e.g. $131.16",
+  "change": "today change e.g. +5.12% or -2.3%",
   "changeDir": "up or down",
-  "high52": "52-week high with $ sign",
-  "low52": "52-week low with $ sign",
-  "revenue": "most recent annual revenue e.g. $601.8M or $4.2B",
-  "pe": "price to earnings ratio e.g. 42.3x or N/A if unprofitable",
-  "mktcap": "market capitalization e.g. $75.9B",
-  "ptHigh": "highest analyst 12-month price target with $ sign",
-  "ptLow": "lowest analyst 12-month price target with $ sign",
+  "high52": "52-week high with $ e.g. $138.38",
+  "low52": "52-week low with $ e.g. $23.92",
+  "revenue": "annual revenue TTM e.g. $601.8M or $4.2B",
+  "pe": "P/E ratio e.g. 42.3x or N/A",
+  "mktcap": "market cap e.g. $12.4B",
+  "ptHigh": "highest analyst price target with $",
+  "ptLow": "lowest analyst price target with $",
   "consensus": "analyst consensus e.g. Strong Buy, Buy, Hold, Sell",
   "updated": "today date e.g. May 20 2026"
 }
 
-If a value is unavailable use N/A. Return only the JSON object, nothing else.`;
+If a value is unavailable use N/A. Return only the JSON object.`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: prompt }]
-      })
+        messages: [{ role: 'user', content: prompt }],
+      }),
     });
 
-    if (!resp.ok) {
-      const err = await resp.json();
-      throw new Error(err.error?.message || `HTTP ${resp.status}`);
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
     }
 
-    const data = await resp.json();
-    let text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-    text = text.replace(/```json|```/g, '').trim();
+    const data = await res.json();
+    const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('').replace(/```json|```/g, '').trim();
 
     let parsed;
     try { parsed = JSON.parse(text); }
     catch {
       const m = text.match(/\{[\s\S]*\}/);
       if (m) parsed = JSON.parse(m[0]);
-      else throw new Error('Could not parse response');
+      else throw new Error('Bad response');
     }
 
-    setData(uid, parsed);
+    applyData(uid, parsed, false);
+    saveRowData(symbol, parsed);
+    setStatus('', 'Ready');
+    updateLastRefreshed();
+
   } catch (err) {
-    setError(uid, err.message.slice(0, 32));
-    console.error(err);
-  } finally {
+    const msg = err.message || 'error';
+    const short = msg.length > 28 ? msg.slice(0, 28) + '…' : msg;
+    setError(uid, short);
+    setStatus('', 'Ready');
+    console.error(`[ELOOMA] ${symbol}:`, err);
   }
 }
 
+// ── Refresh All (staggered) ────────────────────────────────────────────────
 function refreshAll() {
-  const rows = document.querySelectorAll('#stockTable tr');
+  const btn  = document.getElementById('btnRefreshAll');
+  const rows = [...document.querySelectorAll('#tbody tr')].filter(r => r.dataset.symbol);
+  if (!rows.length) return;
+
+  btn.disabled    = true;
+  btn.textContent = '↻ Refreshing…';
+
   let delay = 0;
-  rows.forEach(row => {
-    if (row.dataset.symbol) {
-      const uid = parseInt(row.dataset.uid);
-      setTimeout(() => fetchRow(uid), delay);
-      delay += 20000; // 20s gap between requests to avoid rate limits
-    }
-  });
-}
-
-buildTable();
-
-// ── Restore API key ──
-const savedApiKey = localStorage.getItem('elooma_api_key');
-if (savedApiKey) document.getElementById('apiKey').value = savedApiKey;
-document.getElementById('apiKey').addEventListener('input', () => {
-  const val = document.getElementById('apiKey').value.trim();
-  if (val) localStorage.setItem('elooma_api_key', val);
-  else localStorage.removeItem('elooma_api_key');
-});
-
-// ── Restore last known data on page load ──
-function restoreCachedData() {
-  const saved = JSON.parse(localStorage.getItem('elooma_row_data') || '{}');
-  const rows = document.querySelectorAll('#stockTable tr');
-  rows.forEach(row => {
-    const sym = row.dataset.symbol;
-    if (sym && saved[sym]) {
-      const uid = parseInt(row.dataset.uid);
-      const d = saved[sym];
-      // show cached data immediately
-      setData(uid, d);
-      // overwrite the updated cell to show cached time
-      const updEl = document.getElementById(`updated-${uid}`);
-      if (updEl && d.cachedAt) {
-        const age = Math.round((Date.now() - new Date(d.cachedAt)) / 60000);
-        const label = age < 60 ? `${age}m ago` : age < 1440 ? `${Math.round(age/60)}h ago` : `${Math.round(age/1440)}d ago`;
-        updEl.textContent = label;
-        updEl.className = 'data-cell empty';
-        updEl.title = `Cached at ${new Date(d.cachedAt).toLocaleString()}`;
+  rows.forEach((row, i) => {
+    setTimeout(() => {
+      fetchRow(parseInt(row.dataset.uid));
+      if (i === rows.length - 1) {
+        setTimeout(() => { btn.disabled = false; btn.textContent = '↻ Refresh All'; }, 3000);
       }
-    }
+    }, delay);
+    delay += 20000;
   });
 }
 
-// ── Auto-refresh on open (staggered to respect rate limits) ──
-function autoRefreshOnOpen() {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) return; // no key, skip
-  const rows = document.querySelectorAll('#stockTable tr');
-  let delay = 2000; // small initial delay so page feels settled first
+// ── Status helpers ─────────────────────────────────────────────────────────
+function setStatus(state, text) {
+  const dot  = document.getElementById('statusDot');
+  const lbl  = document.getElementById('statusText');
+  dot.className  = state === 'active' ? 'status-dot active' : 'status-dot';
+  lbl.textContent = text;
+}
+
+function updateLastRefreshed() {
+  const el = document.getElementById('lastRefreshed');
+  if (el) el.textContent = `Last refreshed: ${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`;
+}
+
+// ── Restore cached data on load ────────────────────────────────────────────
+function restoreCache() {
+  document.querySelectorAll('#tbody tr').forEach(row => {
+    const sym = row.dataset.symbol;
+    if (!sym) return;
+    const cached = loadRowData(sym);
+    if (cached) applyData(parseInt(row.dataset.uid), cached, true);
+  });
+}
+
+// ── Auto-refresh on open ───────────────────────────────────────────────────
+function autoRefresh() {
+  if (!getApiKey()) return;
+  const rows = [...document.querySelectorAll('#tbody tr')].filter(r => r.dataset.symbol);
+  let delay  = 1500;
   rows.forEach(row => {
-    if (row.dataset.symbol) {
-      const uid = parseInt(row.dataset.uid);
-      setTimeout(() => fetchRow(uid), delay);
-      delay += 20000;
-    }
+    setTimeout(() => fetchRow(parseInt(row.dataset.uid)), delay);
+    delay += 20000;
   });
 }
 
-// On page load: restore cached data instantly, then quietly refresh in background
-window.addEventListener('load', () => {
-  restoreCachedData();
-  autoRefreshOnOpen();
-});
+// ── Boot ───────────────────────────────────────────────────────────────────
+buildTable();
+initApiKey();
+restoreCache();
+autoRefresh();
 </script>
 </body>
 </html>
