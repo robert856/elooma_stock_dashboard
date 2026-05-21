@@ -8,428 +8,135 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg:       #080a0d;
-  --surface:  #0e1117;
-  --surface2: #141920;
-  --border:   rgba(255,255,255,0.06);
-  --border2:  rgba(255,255,255,0.11);
-  --text:     #dde2ec;
-  --muted:    #5a6478;
-  --dim:      #2d3548;
-  --green:    #00e676;
-  --red:      #ff4444;
-  --amber:    #ffb300;
-  --accent:   #00e5ff;
-  --accent2:  #7c4dff;
-  --mono:     'Space Mono', monospace;
-  --sans:     'Syne', sans-serif;
+  --bg:#080a0d; --surface:#0e1117; --surface2:#141920;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#dde2ec; --muted:#5a6478; --dim:#2d3548;
+  --green:#00e676; --red:#ff4444; --amber:#ffb300; --accent:#00e5ff;
+  --mono:'Space Mono',monospace; --sans:'Syne',sans-serif;
 }
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;padding:32px 28px 48px;
+  background-image:radial-gradient(ellipse 60% 40% at 80% 0%,rgba(0,229,255,0.04) 0%,transparent 60%),
+  radial-gradient(ellipse 40% 30% at 10% 90%,rgba(124,77,255,0.04) 0%,transparent 60%);}
 
-html, body { height: 100%; }
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+.brand-block{display:flex;align-items:center;gap:18px;}
+.brand{font-family:var(--sans);font-size:22px;font-weight:700;letter-spacing:0.15em;color:var(--accent);text-transform:uppercase;position:relative;}
+.brand::after{content:'';position:absolute;bottom:-3px;left:0;width:100%;height:1px;background:linear-gradient(90deg,var(--accent),transparent);}
+.brand-sub{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.08em;line-height:1.6;}
+.brand-sub span{display:block;color:var(--dim);}
+.header-right{font-family:var(--mono);font-size:10px;color:var(--dim);text-align:right;letter-spacing:0.06em;line-height:1.8;}
+.header-right strong{color:var(--muted);font-weight:400;display:block;font-size:11px;}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  min-height: 100vh;
-  padding: 32px 28px 48px;
-  background-image:
-    radial-gradient(ellipse 60% 40% at 80% 0%, rgba(0,229,255,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 10% 90%, rgba(124,77,255,0.04) 0%, transparent 60%);
-}
+/* KEYS */
+.keys-section{margin-bottom:24px;display:flex;flex-direction:column;gap:8px;}
+.key-bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--surface);border:0.5px solid var(--border2);border-radius:6px;}
+.key-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;min-width:110px;}
+.key-input{flex:1;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12px;color:var(--text);min-width:0;}
+.key-input::placeholder{color:var(--dim);}
+.key-input:focus{color:var(--accent);}
+.key-status{font-family:var(--mono);font-size:10px;white-space:nowrap;flex-shrink:0;}
+.key-status.ok{color:var(--green);} .key-status.none{color:var(--dim);}
+.key-note{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.6;}
+.key-note a{color:var(--accent);text-decoration:none;}
 
-/* ── HEADER ── */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-  gap: 16px;
-}
+/* STATUS */
+.status-bar{display:flex;align-items:center;gap:16px;margin-bottom:18px;font-family:var(--mono);font-size:10px;color:var(--dim);flex-wrap:wrap;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--dim);display:inline-block;margin-right:5px;vertical-align:middle;}
+.sdot.on{background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-.brand-block { display: flex; align-items: center; gap: 18px; }
+/* TABLE */
+.table-wrap{width:100%;overflow-x:auto;border:0.5px solid var(--border2);border-radius:8px;background:var(--surface);}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;min-width:1020px;}
+thead tr{border-bottom:0.5px solid var(--border2);background:var(--surface2);}
+th{padding:11px 14px;text-align:left;font-size:9px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;user-select:none;font-family:var(--mono);}
+th.th-drag{width:30px;padding:11px 6px 11px 14px;}
+tbody tr{border-bottom:0.5px solid var(--border);transition:background 0.1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,0.02);}
+tbody tr.sortable-chosen{background:var(--surface2)!important;}
+tbody tr.sortable-ghost{opacity:0.25;}
+td{padding:0;vertical-align:middle;}
 
-.brand {
-  font-family: var(--sans);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  text-transform: uppercase;
-  position: relative;
-}
+/* DRAG */
+.drag-handle{padding:14px 6px 14px 14px;cursor:grab;color:var(--dim);user-select:none;touch-action:none;display:flex;flex-direction:column;gap:3.5px;}
+.drag-handle:active{cursor:grabbing;}
+.drag-handle i{display:block;height:1px;width:14px;background:currentColor;border-radius:1px;}
+tr:hover .drag-handle{color:var(--muted);}
 
-.brand::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, var(--accent), transparent);
-}
+/* SYMBOL */
+.sym-cell{padding:10px 14px;min-width:150px;}
+.sym-wrap{display:flex;flex-direction:column;gap:3px;}
+.sym-input{background:transparent;border:none;outline:none;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);width:90px;letter-spacing:0.06em;text-transform:uppercase;}
+.sym-input::placeholder{color:var(--dim);font-weight:400;font-size:11px;text-transform:none;letter-spacing:0;}
+.sym-input:focus{color:var(--accent);}
+.sym-hint{font-size:9px;color:var(--dim);letter-spacing:0.04em;opacity:0;transition:opacity 0.2s;font-family:var(--mono);}
+.sym-input:focus ~ .sym-hint{opacity:1;}
+.sym-name{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;font-family:var(--sans);}
 
-.brand-sub {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  line-height: 1.4;
-}
+/* DATA CELLS */
+.dc{padding:13px 14px;white-space:nowrap;color:var(--text);font-family:var(--mono);font-size:12px;}
+.dc.empty{color:var(--dim);font-size:11px;}
+.dc.price-cell{font-size:14px;font-weight:700;letter-spacing:0.02em;}
+.live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:6px;vertical-align:middle;animation:pulse 2s infinite;}
+.up{color:var(--green);} .down{color:var(--red);}
+.rating-buy{color:var(--green);} .rating-hold{color:var(--amber);} .rating-sell{color:var(--red);}
+.stale{opacity:0.45;}
+.ai-pending{color:var(--dim);font-size:10px;letter-spacing:0.03em;}
 
-.brand-sub span {
-  display: block;
-  color: var(--dim);
-}
+/* SKELETON */
+.sk{display:inline-block;height:12px;width:52px;border-radius:3px;
+  background:linear-gradient(90deg,var(--surface2) 25%,var(--dim) 50%,var(--surface2) 75%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite;opacity:0.35;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.err-cell{color:var(--red);font-size:10px;letter-spacing:0.03em;}
 
-.header-right {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--dim);
-  text-align: right;
-  letter-spacing: 0.06em;
-  line-height: 1.8;
-}
+/* FOOTER */
+.footer{display:flex;align-items:center;justify-content:space-between;margin-top:18px;flex-wrap:wrap;gap:12px;}
+.footer-note{font-family:var(--mono);font-size:10px;color:var(--dim);}
+.btn-refresh{background:none;border:0.5px solid var(--border2);border-radius:5px;padding:8px 18px;font-family:var(--mono);font-size:10px;color:var(--accent);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.15s;}
+.btn-refresh:hover{background:rgba(0,229,255,0.06);border-color:var(--accent);}
+.btn-refresh:disabled{opacity:0.4;cursor:not-allowed;}
 
-.header-right strong {
-  color: var(--muted);
-  font-weight: 400;
-  display: block;
-  font-size: 11px;
-}
-
-/* ── API KEY BAR ── */
-.key-section { margin-bottom: 28px; }
-
-.key-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  background: var(--surface);
-  border: 0.5px solid var(--border2);
-  border-radius: 6px;
-  margin-bottom: 8px;
-}
-
-.key-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.key-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--text);
-  min-width: 0;
-}
-
-.key-input::placeholder { color: var(--dim); }
-.key-input:focus { color: var(--accent); }
-
-.key-status {
-  font-family: var(--mono);
-  font-size: 10px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.key-status.ok   { color: var(--green); }
-.key-status.none { color: var(--dim); }
-
-.key-note {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--dim);
-  line-height: 1.6;
-}
-
-.key-note a { color: var(--accent); text-decoration: none; }
-
-/* ── STATUS BAR ── */
-.status-bar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--dim);
-  flex-wrap: wrap;
-}
-
-.status-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--dim);
-  display: inline-block;
-  margin-right: 5px;
-  vertical-align: middle;
-}
-
-.status-dot.active {
-  background: var(--green);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-/* ── TABLE ── */
-.table-wrap {
-  width: 100%;
-  overflow-x: auto;
-  border: 0.5px solid var(--border2);
-  border-radius: 8px;
-  background: var(--surface);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--mono);
-  font-size: 12px;
-  min-width: 1000px;
-}
-
-thead tr {
-  border-bottom: 0.5px solid var(--border2);
-  background: var(--surface2);
-}
-
-th {
-  padding: 11px 16px;
-  text-align: left;
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
-  user-select: none;
-  font-family: var(--mono);
-}
-
-th.th-drag { width: 32px; padding: 11px 8px 11px 16px; }
-
-tbody tr {
-  border-bottom: 0.5px solid var(--border);
-  transition: background 0.12s;
-}
-
-tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: rgba(255,255,255,0.02); }
-tbody tr.sortable-chosen { background: var(--surface2) !important; }
-tbody tr.sortable-ghost  { opacity: 0.25; }
-
-td { padding: 0; vertical-align: middle; }
-
-/* drag handle */
-.drag-handle {
-  padding: 14px 8px 14px 16px;
-  cursor: grab;
-  color: var(--dim);
-  user-select: none;
-  touch-action: none;
-  display: flex;
-  flex-direction: column;
-  gap: 3.5px;
-  width: 32px;
-}
-
-.drag-handle:active { cursor: grabbing; }
-.drag-handle i { display: block; height: 1px; width: 14px; background: currentColor; border-radius: 1px; transition: background 0.15s; }
-tr:hover .drag-handle { color: var(--muted); }
-
-/* symbol cell */
-.sym-cell {
-  padding: 10px 16px;
-  min-width: 150px;
-}
-
-.sym-wrap { display: flex; flex-direction: column; gap: 3px; }
-
-.sym-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  width: 90px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.sym-input::placeholder { color: var(--dim); font-weight: 400; font-size: 11px; text-transform: none; letter-spacing: 0; }
-.sym-input:focus { color: var(--accent); }
-
-.sym-hint {
-  font-size: 9px;
-  color: var(--dim);
-  letter-spacing: 0.04em;
-  opacity: 0;
-  transition: opacity 0.2s;
-  font-family: var(--mono);
-}
-
-.sym-input:focus ~ .sym-hint { opacity: 1; }
-
-.sym-name {
-  font-size: 9px;
-  color: var(--muted);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 130px;
-  font-family: var(--sans);
-}
-
-/* data cells */
-.dc {
-  padding: 14px 16px;
-  white-space: nowrap;
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 12px;
-}
-
-.dc.empty { color: var(--dim); font-size: 11px; }
-.dc.price-cell { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
-
-.live-dot {
-  display: inline-block;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--green);
-  margin-right: 6px;
-  vertical-align: middle;
-  animation: pulse 2s infinite;
-}
-
-.up   { color: var(--green); }
-.down { color: var(--red); }
-
-.rating-buy  { color: var(--green); }
-.rating-hold { color: var(--amber); }
-.rating-sell { color: var(--red); }
-
-.stale { opacity: 0.5; }
-
-/* skeleton shimmer */
-.sk {
-  display: inline-block;
-  height: 12px;
-  width: 56px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--surface2) 25%, var(--dim) 50%, var(--surface2) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-  opacity: 0.4;
-}
-
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-
-.err-cell { color: var(--red); font-size: 10px; letter-spacing: 0.03em; }
-
-/* ── FOOTER ── */
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 20px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.footer-note {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--dim);
-  letter-spacing: 0.04em;
-}
-
-.btn-refresh {
-  background: none;
-  border: 0.5px solid var(--border2);
-  border-radius: 5px;
-  padding: 8px 18px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--accent);
-  cursor: pointer;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transition: all 0.15s;
-}
-
-.btn-refresh:hover {
-  background: rgba(0,229,255,0.06);
-  border-color: var(--accent);
-}
-
-.btn-refresh:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-@media (max-width: 640px) {
-  body { padding: 20px 14px 40px; }
-  .header { flex-direction: column; align-items: flex-start; }
-  .header-right { text-align: left; }
-}
+@media(max-width:640px){body{padding:20px 14px 40px;}.header{flex-direction:column;align-items:flex-start;}}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <div class="brand-block">
     <div class="brand">Elooma</div>
-    <div class="brand-sub">
-      Stock Dashboard
-      <span>Powered by Claude AI</span>
-    </div>
+    <div class="brand-sub">Stock Dashboard<span>Powered by Claude AI + Finnhub</span></div>
   </div>
-  <div class="header-right">
-    <strong>Created by Elooma</strong>
-    Beta v1.0
-  </div>
+  <div class="header-right"><strong>Created by Elooma</strong>Beta v1.1</div>
 </header>
 
-<!-- API KEY -->
-<div class="key-section">
+<div class="keys-section">
   <div class="key-bar">
-    <span class="key-label">API Key</span>
-    <input class="key-input" type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false" />
-    <span class="key-status none" id="keyStatus">No key</span>
+    <span class="key-label">Anthropic Key</span>
+    <input class="key-input" type="password" id="anthropicKey" placeholder="sk-ant-api03-… (for analyst data)" autocomplete="off" spellcheck="false"/>
+    <span class="key-status none" id="anthropicStatus">No key</span>
+  </div>
+  <div class="key-bar">
+    <span class="key-label">Finnhub Key</span>
+    <input class="key-input" type="text" id="finnhubKey" placeholder="Get free key at finnhub.io (for live prices)" autocomplete="off" spellcheck="false"/>
+    <span class="key-status none" id="finnhubStatus">No key</span>
   </div>
   <p class="key-note">
-    Your key is saved in this browser only — never sent anywhere except directly to Anthropic.
-    Get one free at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys.
+    Both keys saved in your browser only — never stored elsewhere.
+    Finnhub: <a href="https://finnhub.io/register" target="_blank">finnhub.io/register</a> (free, no card) ·
+    Anthropic: <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
   </p>
 </div>
 
-<!-- STATUS BAR -->
 <div class="status-bar">
-  <span><span class="status-dot" id="statusDot"></span><span id="statusText">Ready</span></span>
+  <span><span class="sdot" id="sdot"></span><span id="stext">Ready</span></span>
   <span id="lastRefreshed"></span>
 </div>
 
-<!-- TABLE -->
 <div class="table-wrap">
   <table>
     <thead>
@@ -451,402 +158,290 @@ tr:hover .drag-handle { color: var(--muted); }
   </table>
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
-  <span class="footer-note">Data via Claude AI web search — not real-time. For informational use only.</span>
-  <button class="btn-refresh" id="btnRefreshAll" onclick="refreshAll()">↻ Refresh All</button>
+  <span class="footer-note">Prices via Finnhub · Analyst data via Claude AI · For informational use only.</span>
+  <button class="btn-refresh" id="btnAll" onclick="refreshAll()">↻ Refresh All</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
 'use strict';
 
-// ── Constants ──────────────────────────────────────────────────────────────
 const DEFAULT_SYMBOLS = ['RKLB','','','','','','',''];
-const STORAGE = {
-  KEY:     'elooma_api_key',
-  SYMBOLS: 'elooma_symbols',
-  DATA:    'elooma_row_data',
+const SK = { ANTHROPIC:'elooma_anthropic_key', FINNHUB:'elooma_finnhub_key', SYMBOLS:'elooma_symbols', DATA:'elooma_row_data' };
+
+let uid = 0;
+
+// ── Storage ────────────────────────────────────────────────────────────────
+const ls = {
+  get:(k,fb=null)=>{ try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):fb;}catch{return fb;}},
+  set:(k,v)=>{ try{localStorage.setItem(k,JSON.stringify(v));}catch{}},
+  del:(k)=>{ try{localStorage.removeItem(k);}catch{}}
 };
 
-// ── State ──────────────────────────────────────────────────────────────────
-let uidCounter = 0;
-let refreshQueue = null; // setTimeout handle
+// ── Key management ─────────────────────────────────────────────────────────
+function initKeys(){
+  const ak=ls.get(SK.ANTHROPIC), fk=ls.get(SK.FINNHUB);
+  if(ak){document.getElementById('anthropicKey').value=ak; setKS('anthropic',true);}
+  if(fk){document.getElementById('finnhubKey').value=fk;  setKS('finnhub',true);}
 
-// ── Storage helpers ────────────────────────────────────────────────────────
-const store = {
-  get: (k, fallback = null) => { try { const v = localStorage.getItem(k); return v != null ? JSON.parse(v) : fallback; } catch { return fallback; } },
-  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
-  del: (k)    => { try { localStorage.removeItem(k); } catch {} },
-};
-
-// ── API Key management ─────────────────────────────────────────────────────
-function initApiKey() {
-  const inp = document.getElementById('apiKey');
-  const saved = store.get(STORAGE.KEY);
-  if (saved) { inp.value = saved; updateKeyStatus(true); }
-
-  inp.addEventListener('input', () => {
-    const v = inp.value.trim();
-    if (v) { store.set(STORAGE.KEY, v); updateKeyStatus(true); }
-    else   { store.del(STORAGE.KEY);   updateKeyStatus(false); }
+  document.getElementById('anthropicKey').addEventListener('input',e=>{
+    const v=e.target.value.trim();
+    v ? ls.set(SK.ANTHROPIC,v) : ls.del(SK.ANTHROPIC);
+    setKS('anthropic',!!v);
+  });
+  document.getElementById('finnhubKey').addEventListener('input',e=>{
+    const v=e.target.value.trim();
+    v ? ls.set(SK.FINNHUB,v) : ls.del(SK.FINNHUB);
+    setKS('finnhub',!!v);
   });
 }
 
-function updateKeyStatus(hasKey) {
-  const el = document.getElementById('keyStatus');
-  if (hasKey) { el.textContent = '● Key saved'; el.className = 'key-status ok'; }
-  else        { el.textContent = 'No key';      el.className = 'key-status none'; }
+function setKS(which,ok){
+  const id=which==='anthropic'?'anthropicStatus':'finnhubStatus';
+  const el=document.getElementById(id);
+  el.textContent=ok?'● Saved':'No key';
+  el.className='key-status '+(ok?'ok':'none');
 }
 
-function getApiKey() { return document.getElementById('apiKey').value.trim(); }
+const getAnthropicKey=()=>document.getElementById('anthropicKey').value.trim();
+const getFinnhubKey  =()=>document.getElementById('finnhubKey').value.trim();
 
 // ── Symbol persistence ─────────────────────────────────────────────────────
-function saveSymbols() {
-  const syms = [...document.querySelectorAll('#tbody tr')].map(r => r.dataset.symbol || '');
-  store.set(STORAGE.SYMBOLS, syms);
-}
+const saveSymbols=()=>ls.set(SK.SYMBOLS,[...document.querySelectorAll('#tbody tr')].map(r=>r.dataset.symbol||''));
+const loadSymbols=()=>{ const s=ls.get(SK.SYMBOLS); return(Array.isArray(s)&&s.length)?s:[...DEFAULT_SYMBOLS]; };
 
-function loadSymbols() {
-  const saved = store.get(STORAGE.SYMBOLS);
-  return (Array.isArray(saved) && saved.length) ? saved : [...DEFAULT_SYMBOLS];
-}
-
-// ── Row data persistence ───────────────────────────────────────────────────
-function saveRowData(symbol, data) {
-  if (!symbol) return;
-  const all = store.get(STORAGE.DATA, {});
-  all[symbol] = { ...data, _savedAt: new Date().toISOString() };
-  store.set(STORAGE.DATA, all);
-}
-
-function loadRowData(symbol) {
-  if (!symbol) return null;
-  const all = store.get(STORAGE.DATA, {});
-  return all[symbol] || null;
-}
-
-function ageLabel(iso) {
-  if (!iso) return '';
-  const mins = Math.round((Date.now() - new Date(iso)) / 60000);
-  if (mins <  1)    return 'just now';
-  if (mins <  60)   return `${mins}m ago`;
-  if (mins <  1440) return `${Math.round(mins/60)}h ago`;
-  return `${Math.round(mins/1440)}d ago`;
-}
+// ── Row data cache ─────────────────────────────────────────────────────────
+function saveCache(sym,data){ if(!sym)return; const a=ls.get(SK.DATA,{}); a[sym]={...data,_at:new Date().toISOString()}; ls.set(SK.DATA,a); }
+function loadCache(sym){ if(!sym)return null; return(ls.get(SK.DATA,{})[sym]||null); }
+function ageStr(iso){ if(!iso)return''; const m=Math.round((Date.now()-new Date(iso))/60000); if(m<1)return'just now'; if(m<60)return`${m}m ago`; if(m<1440)return`${Math.round(m/60)}h ago`; return`${Math.round(m/1440)}d ago`; }
 
 // ── Row builder ────────────────────────────────────────────────────────────
-function makeRow(symbol) {
-  const uid = uidCounter++;
-  const tr  = document.createElement('tr');
-  tr.dataset.uid    = uid;
-  tr.dataset.symbol = symbol || '';
+function makeRow(sym){
+  const id=uid++;
+  const tr=document.createElement('tr');
+  tr.dataset.uid=id; tr.dataset.symbol=sym||'';
 
-  // drag handle
-  const tdDrag = document.createElement('td');
-  tdDrag.innerHTML = `<div class="drag-handle"><i></i><i></i><i></i></div>`;
-  tr.appendChild(tdDrag);
+  // drag
+  const td0=document.createElement('td');
+  td0.innerHTML='<div class="drag-handle"><i></i><i></i><i></i></div>';
+  tr.appendChild(td0);
 
-  // symbol cell
-  const tdSym = document.createElement('td');
-  const symWrap = document.createElement('div');
-  symWrap.className = 'sym-cell';
+  // symbol
+  const td1=document.createElement('td');
+  const wrap=document.createElement('div'); wrap.className='sym-cell';
+  const inner=document.createElement('div'); inner.className='sym-wrap';
+  const inp=document.createElement('input');
+  inp.className='sym-input'; inp.type='text'; inp.value=sym||''; inp.placeholder='Ticker…'; inp.maxLength=10; inp.spellcheck=false;
+  const hint=document.createElement('span'); hint.className='sym-hint'; hint.textContent='enter ↵ or click away';
+  const nm=document.createElement('span'); nm.className='sym-name'; nm.id=`nm-${id}`;
+  inp.addEventListener('keydown',e=>{ if(e.key!=='Enter')return; const v=inp.value.trim().toUpperCase(); inp.value=v; tr.dataset.symbol=v; saveSymbols(); inp.blur(); if(v)fetchRow(id); });
+  inp.addEventListener('blur',()=>{ const v=inp.value.trim().toUpperCase(); const prev=tr.dataset.symbol; inp.value=v; tr.dataset.symbol=v; saveSymbols(); if(v&&v!==prev)fetchRow(id); });
+  inner.appendChild(inp); inner.appendChild(hint); inner.appendChild(nm); wrap.appendChild(inner); td1.appendChild(wrap); tr.appendChild(td1);
 
-  const inner = document.createElement('div');
-  inner.className = 'sym-wrap';
-
-  const inp = document.createElement('input');
-  inp.className   = 'sym-input';
-  inp.type        = 'text';
-  inp.value       = symbol || '';
-  inp.placeholder = 'Ticker…';
-  inp.maxLength   = 10;
-  inp.spellcheck  = false;
-
-  const hint = document.createElement('span');
-  hint.className   = 'sym-hint';
-  hint.textContent = 'enter ↵ or click away';
-
-  const nameEl = document.createElement('span');
-  nameEl.className = 'sym-name';
-  nameEl.id        = `name-${uid}`;
-
-  inp.addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-    const v = inp.value.trim().toUpperCase();
-    inp.value = v;
-    tr.dataset.symbol = v;
-    saveSymbols();
-    inp.blur();
-    if (v) fetchRow(uid);
+  // data cols: price change range revenue pe mktcap pt consensus updated
+  ['price','change','range','revenue','pe','mktcap','pt','consensus','updated'].forEach(col=>{
+    const td=document.createElement('td'); td.className='dc empty'; td.id=`${col}-${id}`; td.textContent='—'; tr.appendChild(td);
   });
-
-  inp.addEventListener('blur', () => {
-    const v = inp.value.trim().toUpperCase();
-    inp.value = v;
-    const prev = tr.dataset.symbol;
-    tr.dataset.symbol = v;
-    saveSymbols();
-    if (v && v !== prev) fetchRow(uid);
-  });
-
-  inner.appendChild(inp);
-  inner.appendChild(hint);
-  inner.appendChild(nameEl);
-  symWrap.appendChild(inner);
-  tdSym.appendChild(symWrap);
-  tr.appendChild(tdSym);
-
-  // data cells — order matches columns
-  const cols = ['price','change','range','revenue','pe','mktcap','pt','consensus','updated'];
-  cols.forEach(col => {
-    const td = document.createElement('td');
-    td.className = 'dc empty';
-    td.id        = `${col}-${uid}`;
-    td.textContent = '—';
-    tr.appendChild(td);
-  });
-
   return tr;
 }
 
-// ── Table init ─────────────────────────────────────────────────────────────
-function buildTable() {
-  const tbody = document.getElementById('tbody');
-  tbody.innerHTML = '';
-  loadSymbols().forEach(s => tbody.appendChild(makeRow(s)));
-
-  Sortable.create(tbody, {
-    handle:      '.drag-handle',
-    animation:   150,
-    ghostClass:  'sortable-ghost',
-    chosenClass: 'sortable-chosen',
-    onEnd:       saveSymbols,
-  });
+// ── Table ──────────────────────────────────────────────────────────────────
+function buildTable(){
+  const tb=document.getElementById('tbody'); tb.innerHTML='';
+  loadSymbols().forEach(s=>tb.appendChild(makeRow(s)));
+  Sortable.create(tb,{handle:'.drag-handle',animation:150,ghostClass:'sortable-ghost',chosenClass:'sortable-chosen',onEnd:saveSymbols});
 }
 
 // ── Cell helpers ───────────────────────────────────────────────────────────
-function cell(col, uid) { return document.getElementById(`${col}-${uid}`); }
+const C=(col,id)=>document.getElementById(`${col}-${id}`);
 
-function setLoading(uid) {
-  // Only show skeleton if cell is truly empty (no cached data)
-  const priceEl = cell('price', uid);
-  if (priceEl && priceEl.textContent.includes('$')) {
-    priceEl.classList.add('stale');
-    return;
-  }
-  ['price','change','range','revenue','pe','mktcap','pt','consensus','updated'].forEach(col => {
-    const td = cell(col, uid);
-    if (td) { td.innerHTML = '<span class="sk"></span>'; td.className = 'dc'; }
-  });
-}
+function ratingClass(r){ if(!r)return''; const s=r.toLowerCase(); if(s.includes('buy'))return'rating-buy'; if(s.includes('hold')||s.includes('neu'))return'rating-hold'; if(s.includes('sell'))return'rating-sell'; return''; }
 
-function setError(uid, msg) {
-  const priceEl = cell('price', uid);
-  const hasCached = priceEl && priceEl.textContent.includes('$');
-  if (hasCached) {
-    priceEl.classList.remove('stale');
-    const upd = cell('updated', uid);
-    if (upd) { upd.textContent = '⚠ failed'; upd.className = 'dc err-cell'; }
-    return;
-  }
-  const priceCell = cell('price', uid);
-  if (priceCell) { priceCell.textContent = msg; priceCell.className = 'dc err-cell'; }
-  ['change','range','revenue','pe','mktcap','pt','consensus','updated'].forEach(col => {
-    const td = cell(col, uid);
-    if (td) { td.textContent = '—'; td.className = 'dc empty'; }
-  });
-}
-
-function ratingClass(r) {
-  if (!r) return '';
-  const s = r.toLowerCase();
-  if (s.includes('buy'))                       return 'rating-buy';
-  if (s.includes('hold') || s.includes('neu')) return 'rating-hold';
-  if (s.includes('sell'))                      return 'rating-sell';
-  return '';
-}
-
-function applyData(uid, d, isCache) {
-  const p = cell('price', uid);
-  if (!p) return;
-
+function applyPrice(id, d){
+  // d: { price, change, changePct, high52, low52, open, prevClose, name }
+  const p=C('price',id); if(!p)return;
   p.classList.remove('stale');
-  p.innerHTML  = `<span class="live-dot"></span>${d.price || '—'}`;
-  p.className  = 'dc price-cell';
+  p.innerHTML=`<span class="live-dot"></span>$${d.price.toFixed(2)}`;
+  p.className='dc price-cell';
 
-  const dir = d.changeDir === 'up' ? 'up' : d.changeDir === 'down' ? 'down' : '';
-  const ch  = cell('change', uid);
-  if (ch) { ch.textContent = d.change || '—'; ch.className = `dc ${dir}`; }
+  const sign=d.change>=0?'+':'';
+  const ch=C('change',id);
+  if(ch){ ch.textContent=`${sign}${d.change.toFixed(2)} (${sign}${d.changePct.toFixed(2)}%)`; ch.className=`dc ${d.change>=0?'up':'down'}`; }
 
-  const rng = cell('range', uid);
-  if (rng) { rng.textContent = (d.high52 && d.low52) ? `${d.high52} / ${d.low52}` : d.high52 || '—'; rng.className = 'dc'; }
+  const rng=C('range',id);
+  if(rng){ rng.textContent=d.high52?`$${d.high52.toFixed(2)} / $${d.low52.toFixed(2)}`:'—'; rng.className='dc'; }
 
-  const rev = cell('revenue', uid);
-  if (rev) { rev.textContent = d.revenue || '—'; rev.className = 'dc'; }
+  const upd=C('updated',id);
+  if(upd){ upd.textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); upd.className='dc empty'; }
 
-  const pe = cell('pe', uid);
-  if (pe) { pe.textContent = d.pe || '—'; pe.className = 'dc'; }
+  const nm=document.getElementById(`nm-${id}`);
+  if(nm&&d.name) nm.textContent=d.name;
+}
 
-  const mc = cell('mktcap', uid);
-  if (mc) { mc.textContent = d.mktcap || '—'; mc.className = 'dc'; }
+function applyAnalyst(id, d){
+  // d: { revenue, pe, mktcap, ptHigh, ptLow, consensus }
+  const rev=C('revenue',id); if(rev){rev.textContent=d.revenue||'—'; rev.className='dc';}
+  const pe=C('pe',id);  if(pe){pe.textContent=d.pe||'—'; pe.className='dc';}
+  const mc=C('mktcap',id); if(mc){mc.textContent=d.mktcap||'—'; mc.className='dc';}
+  const pt=C('pt',id);  if(pt){pt.textContent=(d.ptHigh&&d.ptLow)?`${d.ptHigh} / ${d.ptLow}`:(d.ptHigh||'—'); pt.className='dc';}
+  const con=C('consensus',id); if(con){con.textContent=d.consensus||'—'; con.className=`dc ${ratingClass(d.consensus)}`;}
+}
 
-  const pt = cell('pt', uid);
-  if (pt) { pt.textContent = (d.ptHigh && d.ptLow) ? `${d.ptHigh} / ${d.ptLow}` : d.ptHigh || '—'; pt.className = 'dc'; }
-
-  const con = cell('consensus', uid);
-  if (con) { con.textContent = d.consensus || '—'; con.className = `dc ${ratingClass(d.consensus)}`; }
-
-  const upd = cell('updated', uid);
-  if (upd) {
-    upd.textContent = isCache ? ageLabel(d._savedAt) : (d.updated || new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}));
-    upd.className   = 'dc empty';
-    if (isCache && d._savedAt) upd.title = `Cached ${new Date(d._savedAt).toLocaleString()}`;
+function applyCache(id, d){
+  // price part
+  if(d.price){
+    const p=C('price',id);
+    if(p){ p.innerHTML=`<span class="live-dot"></span>${d.price}`; p.className='dc price-cell stale'; }
+    const ch=C('change',id);
+    if(ch){ ch.textContent=d.change||'—'; ch.className=`dc ${d.changeDir==='up'?'up':d.changeDir==='down'?'down':''}`; }
+    const rng=C('range',id);
+    if(rng){ rng.textContent=(d.high52&&d.low52)?`${d.high52} / ${d.low52}`:'—'; rng.className='dc'; }
   }
-
-  const nm = document.getElementById(`name-${uid}`);
-  if (nm && d.companyName) nm.textContent = d.companyName;
+  // analyst part
+  const rev=C('revenue',id); if(rev){rev.textContent=d.revenue||'—'; rev.className='dc';}
+  const pe=C('pe',id);  if(pe){pe.textContent=d.pe||'—'; pe.className='dc';}
+  const mc=C('mktcap',id); if(mc){mc.textContent=d.mktcap||'—'; mc.className='dc';}
+  const pt=C('pt',id);  if(pt){pt.textContent=(d.ptHigh&&d.ptLow)?`${d.ptHigh} / ${d.ptLow}`:(d.ptHigh||'—'); pt.className='dc';}
+  const con=C('consensus',id); if(con){con.textContent=d.consensus||'—'; con.className=`dc ${ratingClass(d.consensus)}`;}
+  const upd=C('updated',id); if(upd){ upd.textContent=ageStr(d._at); upd.className='dc empty'; if(d._at)upd.title=`Cached ${new Date(d._at).toLocaleString()}`; }
+  const nm=document.getElementById(`nm-${id}`); if(nm&&d.companyName)nm.textContent=d.companyName;
 }
 
-// ── Fetch ──────────────────────────────────────────────────────────────────
-async function fetchRow(uid) {
-  const row    = document.querySelector(`tr[data-uid="${uid}"]`);
-  if (!row) return;
-  const symbol = (row.dataset.symbol || '').trim().toUpperCase();
-  if (!symbol) return;
+// ── Finnhub fetch (instant prices) ────────────────────────────────────────
+async function fetchPrices(id){
+  const row=document.querySelector(`tr[data-uid="${id}"]`); if(!row)return;
+  const sym=(row.dataset.symbol||'').trim().toUpperCase(); if(!sym)return;
+  const fk=getFinnhubKey(); if(!fk)return;
 
-  const apiKey = getApiKey();
-  if (!apiKey) { alert('Please enter your Anthropic API key first.'); return; }
-
-  setLoading(uid);
-  setStatus('active', `Fetching ${symbol}…`);
-
-  const prompt = `You are a financial data assistant. For the stock ticker "${symbol}", use your web_search tool to find current data, then return ONLY a valid JSON object — no markdown, no explanation, nothing else outside the JSON.
-
-Required JSON keys:
-{
-  "companyName": "company name max 22 chars",
-  "price": "current price with $ e.g. $131.16",
-  "change": "today change e.g. +5.12% or -2.3%",
-  "changeDir": "up or down",
-  "high52": "52-week high with $ e.g. $138.38",
-  "low52": "52-week low with $ e.g. $23.92",
-  "revenue": "annual revenue TTM e.g. $601.8M or $4.2B",
-  "pe": "P/E ratio e.g. 42.3x or N/A",
-  "mktcap": "market cap e.g. $12.4B",
-  "ptHigh": "highest analyst price target with $",
-  "ptLow": "lowest analyst price target with $",
-  "consensus": "analyst consensus e.g. Strong Buy, Buy, Hold, Sell",
-  "updated": "today date e.g. May 20 2026"
-}
-
-If a value is unavailable use N/A. Return only the JSON object.`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: prompt }],
-      }),
+  try{
+    const [qRes, mRes] = await Promise.all([
+      fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(sym)}&token=${fk}`),
+      fetch(`https://finnhub.io/api/v1/stock/metric?symbol=${encodeURIComponent(sym)}&metric=all&token=${fk}`)
+    ]);
+    const q=await qRes.json();
+    const m=await mRes.json();
+    if(!q.c || q.c===0) throw new Error('no data');
+    const metrics=m?.metric||{};
+    applyPrice(id,{
+      price:    q.c,
+      change:   q.d||0,
+      changePct:q.dp||0,
+      high52:   metrics['52WeekHigh']||null,
+      low52:    metrics['52WeekLow'] ||null,
+      name:     null
     });
+    // merge into cache
+    const cached=loadCache(sym)||{};
+    saveCache(sym,{...cached, price:`$${q.c.toFixed(2)}`, change:`${(q.d||0)>=0?'+':''}${(q.d||0).toFixed(2)} (${(q.dp||0)>=0?'+':''}${(q.dp||0).toFixed(2)}%)`, changeDir:(q.d||0)>=0?'up':'down', high52:metrics['52WeekHigh']?`$${metrics['52WeekHigh'].toFixed(2)}`:null, low52:metrics['52WeekLow']?`$${metrics['52WeekLow'].toFixed(2)}`:null});
+  }catch(e){ console.warn(`[price] ${sym}:`,e.message); }
+}
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error?.message || `HTTP ${res.status}`);
-    }
+// ── Claude fetch (analyst data) ────────────────────────────────────────────
+async function fetchAnalyst(id){
+  const row=document.querySelector(`tr[data-uid="${id}"]`); if(!row)return;
+  const sym=(row.dataset.symbol||'').trim().toUpperCase(); if(!sym)return;
+  const ak=getAnthropicKey(); if(!ak)return;
 
-    const data = await res.json();
-    const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('').replace(/```json|```/g, '').trim();
+  // mark analyst cols as loading
+  ['revenue','pe','mktcap','pt','consensus'].forEach(col=>{
+    const td=C(col,id);
+    if(td&&td.textContent==='—'){ td.innerHTML='<span class="sk"></span>'; td.className='dc'; }
+  });
 
-    let parsed;
-    try { parsed = JSON.parse(text); }
-    catch {
-      const m = text.match(/\{[\s\S]*\}/);
-      if (m) parsed = JSON.parse(m[0]);
-      else throw new Error('Bad response');
-    }
+  const prompt=`For stock ticker "${sym}", search the web and return ONLY a JSON object, nothing else:
+{"companyName":"short name max 22 chars","revenue":"annual revenue TTM e.g. $601.8M","pe":"P/E ratio e.g. 42.3x or N/A","mktcap":"market cap e.g. $12.4B","ptHigh":"highest analyst price target with $","ptLow":"lowest analyst price target with $","consensus":"analyst consensus e.g. Strong Buy, Buy, Hold, Sell","updated":"today date"}
+Use N/A if unavailable. Return only the JSON.`;
 
-    applyData(uid, parsed, false);
-    saveRowData(symbol, parsed);
-    setStatus('', 'Ready');
-    updateLastRefreshed();
-
-  } catch (err) {
-    const msg = err.message || 'error';
-    const short = msg.length > 28 ? msg.slice(0, 28) + '…' : msg;
-    setError(uid, short);
-    setStatus('', 'Ready');
-    console.error(`[ELOOMA] ${symbol}:`, err);
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':ak,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt}]})
+    });
+    if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||`HTTP ${res.status}`); }
+    const data=await res.json();
+    let text=data.content.filter(b=>b.type==='text').map(b=>b.text).join('').replace(/```json|```/g,'').trim();
+    let parsed; try{parsed=JSON.parse(text);}catch{ const m=text.match(/\{[\s\S]*\}/); if(m)parsed=JSON.parse(m[0]); else throw new Error('bad json'); }
+    applyAnalyst(id,parsed);
+    // merge into cache
+    const cached=loadCache(sym)||{};
+    saveCache(sym,{...cached,...parsed});
+    const nm=document.getElementById(`nm-${id}`); if(nm&&parsed.companyName)nm.textContent=parsed.companyName;
+  }catch(e){
+    ['revenue','pe','mktcap','pt','consensus'].forEach(col=>{ const td=C(col,id); if(td){ td.textContent='—'; td.className='dc empty'; }});
+    console.warn(`[analyst] ${sym}:`,e.message);
   }
 }
 
-// ── Refresh All (staggered) ────────────────────────────────────────────────
-function refreshAll() {
-  const btn  = document.getElementById('btnRefreshAll');
-  const rows = [...document.querySelectorAll('#tbody tr')].filter(r => r.dataset.symbol);
-  if (!rows.length) return;
+// ── Fetch a full row ───────────────────────────────────────────────────────
+async function fetchRow(id){
+  const row=document.querySelector(`tr[data-uid="${id}"]`); if(!row)return;
+  const sym=(row.dataset.symbol||'').trim().toUpperCase(); if(!sym)return;
 
-  btn.disabled    = true;
-  btn.textContent = '↻ Refreshing…';
+  setStatus(true,`Fetching ${sym}…`);
 
-  let delay = 0;
-  rows.forEach((row, i) => {
-    setTimeout(() => {
-      fetchRow(parseInt(row.dataset.uid));
-      if (i === rows.length - 1) {
-        setTimeout(() => { btn.disabled = false; btn.textContent = '↻ Refresh All'; }, 3000);
-      }
-    }, delay);
-    delay += 20000;
+  // Prices and analyst fire in parallel — prices are instant, analyst takes longer
+  await Promise.allSettled([
+    fetchPrices(id),
+    fetchAnalyst(id)
+  ]);
+
+  setStatus(false,'Ready');
+  document.getElementById('lastRefreshed').textContent=`Updated ${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`;
+}
+
+// ── Refresh All ────────────────────────────────────────────────────────────
+function refreshAll(){
+  const btn=document.getElementById('btnAll');
+  const rows=[...document.querySelectorAll('#tbody tr')].filter(r=>r.dataset.symbol);
+  if(!rows.length)return;
+
+  btn.disabled=true; btn.textContent='↻ Refreshing…';
+
+  // Prices: fire all at once (Finnhub handles it)
+  rows.forEach(r=>fetchPrices(parseInt(r.dataset.uid)));
+
+  // Analyst: stagger 20s apart (Anthropic rate limit)
+  let delay=500;
+  rows.forEach((r,i)=>{
+    setTimeout(()=>{
+      fetchAnalyst(parseInt(r.dataset.uid));
+      if(i===rows.length-1) setTimeout(()=>{ btn.disabled=false; btn.textContent='↻ Refresh All'; },3000);
+    },delay);
+    delay+=20000;
   });
 }
 
-// ── Status helpers ─────────────────────────────────────────────────────────
-function setStatus(state, text) {
-  const dot  = document.getElementById('statusDot');
-  const lbl  = document.getElementById('statusText');
-  dot.className  = state === 'active' ? 'status-dot active' : 'status-dot';
-  lbl.textContent = text;
+// ── Status ─────────────────────────────────────────────────────────────────
+function setStatus(active,text){
+  document.getElementById('sdot').className='sdot'+(active?' on':'');
+  document.getElementById('stext').textContent=text;
 }
 
-function updateLastRefreshed() {
-  const el = document.getElementById('lastRefreshed');
-  if (el) el.textContent = `Last refreshed: ${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`;
-}
-
-// ── Restore cached data on load ────────────────────────────────────────────
-function restoreCache() {
-  document.querySelectorAll('#tbody tr').forEach(row => {
-    const sym = row.dataset.symbol;
-    if (!sym) return;
-    const cached = loadRowData(sym);
-    if (cached) applyData(parseInt(row.dataset.uid), cached, true);
+// ── Restore cache ──────────────────────────────────────────────────────────
+function restoreCache(){
+  document.querySelectorAll('#tbody tr').forEach(row=>{
+    const sym=row.dataset.symbol; if(!sym)return;
+    const c=loadCache(sym); if(c)applyCache(parseInt(row.dataset.uid),c);
   });
 }
 
-// ── Auto-refresh on open ───────────────────────────────────────────────────
-function autoRefresh() {
-  if (!getApiKey()) return;
-  const rows = [...document.querySelectorAll('#tbody tr')].filter(r => r.dataset.symbol);
-  let delay  = 1500;
-  rows.forEach(row => {
-    setTimeout(() => fetchRow(parseInt(row.dataset.uid)), delay);
-    delay += 20000;
-  });
+// ── Auto refresh on open ───────────────────────────────────────────────────
+function autoRefresh(){
+  const rows=[...document.querySelectorAll('#tbody tr')].filter(r=>r.dataset.symbol);
+  // Prices: fire all immediately (free, no rate limit)
+  if(getFinnhubKey()) rows.forEach(r=>fetchPrices(parseInt(r.dataset.uid)));
+  // Analyst: stagger (rate limited)
+  if(getAnthropicKey()){
+    let delay=2000;
+    rows.forEach(r=>{ setTimeout(()=>fetchAnalyst(parseInt(r.dataset.uid)),delay); delay+=20000; });
+  }
 }
 
 // ── Boot ───────────────────────────────────────────────────────────────────
 buildTable();
-initApiKey();
+initKeys();
 restoreCache();
 autoRefresh();
 </script>
